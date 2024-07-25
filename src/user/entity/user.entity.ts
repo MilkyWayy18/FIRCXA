@@ -1,6 +1,7 @@
-import { Options } from "@nestjs/common";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Token } from "./token.entity";
+import { Token } from "src/token/entities/token.entity";
+import { ResetToken } from "src/reset-token/entities/reset-token.entity";
+import { UserRole } from "src/token/types/role.type";
 
 
 @Entity()
@@ -17,19 +18,22 @@ export class User {
     @Column()
     hashP: string
 
+    @Column({
+        type: 'enum',
+        enum: UserRole,
+        default: UserRole.user
+    })
+    role: UserRole
+
     @Column({ nullable: true })
     hashedRt:string
 
     @OneToMany(() => Token, token => token.user)
     tokens: Token[];
 
-    @Column({ nullable: true })
-    resetToken: string;
+    @OneToMany(() => ResetToken,RsToken => RsToken.user)
+    resetTokens: ResetToken[]
 
-    @Column({ nullable: true, type: 'timestamp' })
-    resetTokenExpiration: Date;
 
-    // @OneToMany(() => ResetToken, resetToken => resetToken.user)
-    // resetTokens: ResetToken[];
 
 }

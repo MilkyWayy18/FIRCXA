@@ -9,10 +9,11 @@ export class AtGuard extends AuthGuard('jwt') {
   }
 
   handleRequest(err, user, info, context: ExecutionContext) {
-
+    console.log(user)
     if (err || !user) {
-      throw err || new UnauthorizedException();
+      throw err || new UnauthorizedException('Unauthorized!!!');
     }
+
     const request = context.switchToHttp().getRequest<Request>();
     request.user = user;
     return user;

@@ -1,21 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { JwtPayload } from '../types';
+import { Strategy } from 'passport-jwt';
+import { Request } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { JwtPayload } from '../token/types';
 
 @Injectable()
 export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(config: ConfigService) {
+  constructor(private configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'fircxa', // config.get<string>('jwtAT.secret')/
-      passReqToCallback: false,  
+      jwtFromRequest: (req: Request) => {
+        let token = null;
+        if (req && req.cookies) {
+          token = req.cookies['access_token'];
+        }
+        console.log('Access Token:', token); 
+        return token;
+      },
+      secretOrKey: 'fircxa18',
+      passReqToCallback: false, 
     });
   }
 
   async validate(payload: JwtPayload) {
-    // console.log('Payload:', payload);
-    return { userId: payload.sub, email: payload.email };
+    console.log('Validate Payload:', payload); 
+    const { sub: userId, email, role } = payload;
+    if (!userId || !email) {
+      throw new ForbiddenException('Invalid token payload');
+    }
+    return { userId, email, role };
   }
 }
