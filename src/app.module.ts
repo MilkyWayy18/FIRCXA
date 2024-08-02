@@ -53,6 +53,7 @@ import { RsTokenModule } from './reset-token/RsToken.module';
     Reflector,
     AtStrategy, RtStrategy
   ]
+  
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
