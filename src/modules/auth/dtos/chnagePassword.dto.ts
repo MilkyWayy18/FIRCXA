@@ -4,11 +4,9 @@ export class ChangePDto {
 
   @IsNotEmpty()
   @IsString()
-  @Min(7)
   oldPassword: string;
 
   @IsNotEmpty()
   @IsString()
-  @Min(7)
   newPassword: string;
 }

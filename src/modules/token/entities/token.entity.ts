@@ -1,5 +1,6 @@
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user.entity";
+import { User } from "../../user/entity/user.entity";
+
 
 @Entity()
 export class Token {
@@ -19,7 +20,7 @@ export class Token {
     @BeforeInsert()
     setDefaultExpirationDate() {
       const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + 7);
+      currentDate.setDate(currentDate.getDate() + 14);
       this.expirationDate = currentDate;
     }
 }
